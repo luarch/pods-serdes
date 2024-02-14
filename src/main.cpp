@@ -1,13 +1,22 @@
 #include <PodsSerdesConfig.h>
+
 #include <argparse/argparse.hpp>
-#include <nlohmann/json.hpp>
+#include <pods-serdes/tuTraversor.hpp>
 
 int main(int argc, char *argv[])
 {
+    using namespace archielu::pods_serdes;
+
+#ifndef NDEBUG
+    loguru::g_stderr_verbosity = loguru::Verbosity_MAX;
+#endif
+
     argparse::ArgumentParser program("PodsSerdes", PodsSerdes_VERSION);
-    program.add_description(PodsSerdes_DESCRIPTION);
-    program.add_argument("input_files")
+    program.add_description(std::string{PodsSerdes_DESCRIPTION} +
+                            ".\nExtra args are parsed to libclang for parsing input files.");
+    program.add_argument("-f", "--input_files")
         .help("Input files to process. Every single struct will be handled generating code")
+        .required()
         .nargs(argparse::nargs_pattern::at_least_one);
     program.add_argument("-c", "--output-cxx")
         .nargs(1)
@@ -21,9 +30,10 @@ int main(int argc, char *argv[])
         .nargs(0)
         .help("Parse enums (incl. raw defines, global variables) as well");
 
+    std::vector<std::string> unknownArgs;
     try
     {
-        program.parse_args(argc, argv);
+        unknownArgs = program.parse_known_args(argc, argv);
     }
     catch (const std::exception &err)
     {
@@ -32,7 +42,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    auto files = program.get<std::vector<std::string>>("input_files");
+    for (auto &arg : unknownArgs)
+    {
+        LOG_F(INFO, "Clang index argument: %s", arg.c_str());
+    }
+
+    auto files = program.get<std::vector<std::string>>("--input_files");
     auto parseEnums = program.get<bool>("--parse-enums");
 
     auto outputCxx = program.present("--output-cxx");
@@ -45,15 +60,24 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    std::vector<std::unique_ptr<TranslationUnitTraversor>> traversors;
+    for (auto &file : files)
+    {
+        traversors.push_back(std::make_unique<TranslationUnitTraversor>(file, unknownArgs));
+        if (!traversors.back()->Traverse())
+        {
+            return 0;
+        }
+    }
+
     if (outputCxx)
     {
-        std::cout << "Output C++ header to " << outputCxx.value() << std::endl;
-        // TODO handle outputCxx.value()
+        LOG_F(INFO, "Output C++ header to %s", outputCxx.value().c_str());
     }
 
     if (outputPython)
     {
-        std::cout << "Output Python header to " << outputPython.value() << std::endl;
+        LOG_F(INFO, "Output Python header to %s", outputPython.value().c_str());
         // TODO handle outputPython.value()
     }
 
