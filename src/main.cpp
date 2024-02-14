@@ -1,11 +1,13 @@
 #include <PodsSerdesConfig.h>
 
 #include <argparse/argparse.hpp>
+#include <pods-serdes/cxx/gen.hpp>
+#include <pods-serdes/python/gen.hpp>
 #include <pods-serdes/tuTraversor.hpp>
 
 int main(int argc, char *argv[])
 {
-    using namespace archielu::pods_serdes;
+    using namespace luarch::pods_serdes;
 
 #ifndef NDEBUG
     loguru::g_stderr_verbosity = loguru::Verbosity_MAX;
@@ -61,9 +63,10 @@ int main(int argc, char *argv[])
     }
 
     std::vector<std::unique_ptr<TranslationUnitTraversor>> traversors;
+    StructsMap structs;
     for (auto &file : files)
     {
-        traversors.push_back(std::make_unique<TranslationUnitTraversor>(file, unknownArgs));
+        traversors.push_back(std::make_unique<TranslationUnitTraversor>(file, unknownArgs, structs));
         if (!traversors.back()->Traverse())
         {
             return 0;
@@ -72,13 +75,14 @@ int main(int argc, char *argv[])
 
     if (outputCxx)
     {
-        LOG_F(INFO, "Output C++ header to %s", outputCxx.value().c_str());
+        LOG_F(INFO, "Output C++ header source to %s", outputCxx.value().c_str());
+        cxx::Generate(structs, outputCxx.value());
     }
 
     if (outputPython)
     {
-        LOG_F(INFO, "Output Python header to %s", outputPython.value().c_str());
-        // TODO handle outputPython.value()
+        LOG_F(INFO, "Output Python source to %s", outputPython.value().c_str());
+        python::Generate(structs, outputPython.value());
     }
 
     return 0;

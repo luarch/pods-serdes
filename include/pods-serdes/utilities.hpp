@@ -1,9 +1,11 @@
+#pragma once
+
 #include <clang-c/Index.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-namespace archielu { namespace pods_serdes {
+namespace luarch::pods_serdes {
 
 class CXStringWrapper
 {
@@ -111,4 +113,4 @@ inline std::string to_string(const MemberField &member)
 
 using StructsMap = std::unordered_map<std::string, std::vector<MemberField>>;
 
-}} // namespace archielu::pods_serdes
+} // namespace luarch::pods_serdes

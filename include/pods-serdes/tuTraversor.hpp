@@ -1,18 +1,20 @@
+#pragma once
+
 #include <pods-serdes/utilities.hpp>
 
 #include <loguru.hpp>
 #include <optional>
 #include <unordered_set>
 
-namespace archielu { namespace pods_serdes {
+namespace luarch::pods_serdes {
 
 class TranslationUnitTraversor
 {
 public:
     TranslationUnitTraversor(const std::string &translationUnitFile,
-                             const std::vector<std::string> &translationUnitArgs)
-        : mTranslationUnitFile(std::move(translationUnitFile)), mTranslationUnitArgs(translationUnitArgs),
-          mIndex(clang_createIndex(0, 0))
+                             const std::vector<std::string> &translationUnitArgs, StructsMap &structs)
+        : mStructs(structs), mTranslationUnitFile(std::move(translationUnitFile)),
+          mTranslationUnitArgs(translationUnitArgs), mIndex(clang_createIndex(0, 0))
     {}
 
     ~TranslationUnitTraversor()
@@ -40,11 +42,6 @@ public:
     const std::string &GetTranslationUnitFile() const
     {
         return mTranslationUnitFile;
-    }
-
-    const StructsMap &GetStructs() const
-    {
-        return mStructs;
     }
 
 private:
@@ -220,11 +217,11 @@ private:
 
     const std::string mTranslationUnitFile;
     const std::vector<std::string> mTranslationUnitArgs;
-    std::unordered_map<std::string, std::vector<MemberField>> mStructs;
+    StructsMap &mStructs;
 
     CXIndex mIndex{nullptr};
     CXTranslationUnit mTranslationUnit{nullptr};
     bool mIsParsed{false};
 };
 
-}} // namespace archielu::pods_serdes
+} // namespace luarch::pods_serdes
