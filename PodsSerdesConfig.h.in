@@ -1,0 +1,6 @@
+#pragma once
+
+static constexpr auto PodsSerdes_VERSION_MAJOR = @PodsSerdes_VERSION_MAJOR@;
+static constexpr auto PodsSerdes_VERSION_MINOR = @PodsSerdes_VERSION_MINOR@;
+static constexpr auto PodsSerdes_VERSION = "@PodsSerdes_VERSION@";
+static constexpr auto PodsSerdes_DESCRIPTION = "@PodsSerdes_DESCRIPTION@";
