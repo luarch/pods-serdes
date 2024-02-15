@@ -13,7 +13,7 @@ struct VisitorGenerator : public SourceGenerator<VisitorGenerator>
 
     constexpr static const char *Epilogue()
     {
-        return "";
+        return "\n";
     }
 
     static const char *StructStart(const std::string &structName)

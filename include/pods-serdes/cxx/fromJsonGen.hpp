@@ -13,7 +13,7 @@ struct FromJsonGenerator : public SourceGenerator<FromJsonGenerator>
 
     constexpr static const char *Epilogue()
     {
-        return "";
+        return "\n";
     }
 
     static const char *StructStart(const std::string &structName)
