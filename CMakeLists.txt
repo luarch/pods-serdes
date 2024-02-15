@@ -18,21 +18,18 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/p-ranav/argparse.git
     GIT_TAG v3.0
 )
-FetchContent_MakeAvailable(argparse)
 
 FetchContent_Declare(json
     URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
-FetchContent_MakeAvailable(json)
-
-find_package(libclang REQUIRED)
 
 FetchContent_Declare(
     loguru
     GIT_REPOSITORY https://github.com/emilk/loguru.git
     GIT_TAG master
 )
-set(LOGURU_WITH_STREAMS TRUE)
-FetchContent_MakeAvailable(loguru)
+
+FetchContent_MakeAvailable(argparse json loguru)
+find_package(libclang REQUIRED)
 
 configure_file(PodsSerdesConfig.h.in PodsSerdesConfig.h)
 add_executable(PodsSerdes src/main.cpp)

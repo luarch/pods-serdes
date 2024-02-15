@@ -41,9 +41,7 @@ namespace pods_serdes_gen {
     ToStringGenerator::Generate(structs, fs);
     VisitorGenerator::Generate(structs, fs);
 
-fs << R"(
-
-} // namespace pods_serdes_gen)";
+fs << R"(} // namespace pods_serdes_gen)";
 
     return true;
 }
