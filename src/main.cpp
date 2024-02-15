@@ -62,12 +62,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::vector<std::unique_ptr<TranslationUnitTraversor>> traversors;
     StructsMap structs;
     for (auto &file : files)
     {
-        traversors.push_back(std::make_unique<TranslationUnitTraversor>(file, unknownArgs, structs));
-        if (!traversors.back()->Traverse())
+        if (!TranslationUnitTraversor(file, unknownArgs, structs).Traverse())
         {
             return 0;
         }
@@ -76,7 +74,7 @@ int main(int argc, char *argv[])
     if (outputCxx)
     {
         LOG_F(INFO, "Output C++ header source to %s", outputCxx.value().c_str());
-        cxx::Generate(structs, outputCxx.value());
+        cxx::Generate(structs, files, outputCxx.value());
     }
 
     if (outputPython)

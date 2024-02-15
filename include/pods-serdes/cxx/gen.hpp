@@ -5,12 +5,13 @@
 #include <pods-serdes/cxx/toStringGen.hpp>
 #include <pods-serdes/cxx/visitorGen.hpp>
 
-#include <loguru.hpp>
+#include <filesystem>
 #include <fstream>
+#include <loguru.hpp>
 
 namespace luarch::pods_serdes::cxx {
 
-static bool Generate(const StructsMap &structs, const std::string &outputFile)
+static bool Generate(const StructsMap &structs, std::vector<std::string> &inputFiles, const std::string &outputFile)
 {
     std::ofstream fs{outputFile, std::ios::out | std::ios::trunc};
     if (!fs.is_open())
@@ -21,8 +22,16 @@ static bool Generate(const StructsMap &structs, const std::string &outputFile)
 
     fs << R"(#pragma once
 #include <nlohmann/json.hpp>
-#include "USTPFtdcUserApiStruct.h"
+)";
 
+    for (const auto &inputFile : inputFiles)
+    {
+        auto inputFileBasename = std::filesystem::path(inputFile).filename();
+        fs << R"(#include )" << inputFileBasename << R"(
+)";
+    }
+
+    fs << R"(
 namespace pods_serdes_gen {
 
 )";
