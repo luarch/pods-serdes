@@ -12,6 +12,20 @@ class CXStringWrapper
 public:
     CXStringWrapper(CXString cxString) : mCXString(cxString) {}
 
+    CXStringWrapper(const CXStringWrapper &) = delete;
+    CXStringWrapper &operator=(const CXStringWrapper &) = delete;
+    CXStringWrapper(CXStringWrapper &&o)
+    {
+        mCXString = o.mCXString;
+        o.mCXString = CXString();
+    }
+    CXStringWrapper &operator=(CXStringWrapper &&o)
+    {
+        mCXString = o.mCXString;
+        o.mCXString = CXString();
+        return *this;
+    }
+
     ~CXStringWrapper()
     {
         clang_disposeString(mCXString);
