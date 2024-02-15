@@ -2,3 +2,4 @@ _build*
 compile_commands.json
 .cache
 c8build-export/
+__pycache__

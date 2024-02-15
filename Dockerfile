@@ -9,7 +9,7 @@ COPY . /usr/src/pods-serdes
 RUN cd /usr/src/pods-serdes &&\
     mkdir -p _buildc8 &&\
     cd _buildc8 &&\
-    cmake -DLIBCLANG_DIR=/usr/lib64/ .. &&\
+    cmake -DLIBCLANG_DIR=/usr/lib64/ -DCMAKE_BUILD_TYPE=debug .. &&\
     cmake --build .
 
 FROM scratch AS c8build-export

@@ -2,3 +2,4 @@ _build*
 .git/
 .cache/
 c8build-export*
+example/
