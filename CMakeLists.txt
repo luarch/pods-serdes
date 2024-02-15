@@ -20,7 +20,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(argparse)
 
-find_package(nlohmann_json REQUIRED)
+FetchContent_Declare(json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 find_package(libclang REQUIRED)
 
 FetchContent_Declare(
@@ -39,6 +42,8 @@ target_link_libraries(PodsSerdes PRIVATE
     nlohmann_json::nlohmann_json
     loguru::loguru
     ${LIBCLANG_LIBRARY}
+    ${CMAKE_DL_LIBS}
+    stdc++fs
 )
 
 target_include_directories(PodsSerdes PRIVATE
