@@ -35,10 +35,16 @@ R"(inline void from_json(const nlohmann::json &j, ::%s &data)
     static const char *Member(const std::string &structName, const MemberField &member, bool isLast)
     {
         static char buffer[1 << 10];
-        auto format =
-R"(    j.at("%s").get_to(data.%s);)";
-
-        sprintf(buffer, format, member.name.data(), member.name.data());
+        if (member.kind == MemberKind::CharArray)
+        {
+            auto format = R"(    strncpy(data.%s, j.at("%s").get<std::string>().data(), %d);)";
+            sprintf(buffer, format, member.name.data(), member.name.data(), member.arraySize);
+        }
+        else
+        {
+            auto format = R"(    j.at("%s").get_to(data.%s);)";
+            sprintf(buffer, format, member.name.data(), member.name.data());
+        }
         return buffer;
     }
 };

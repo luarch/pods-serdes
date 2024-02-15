@@ -11,17 +11,17 @@ list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_SOURCE_DIR}/cmake/
 )
 include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
+set(FETCHCONTENT_QUIET OFF)
 
 FetchContent_Declare(
     argparse
     GIT_REPOSITORY https://github.com/p-ranav/argparse.git
     GIT_TAG v3.0
 )
-
-FetchContent_Declare(json
-    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
-
+FetchContent_Declare(
+    json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
 FetchContent_Declare(
     loguru
     GIT_REPOSITORY https://github.com/emilk/loguru.git

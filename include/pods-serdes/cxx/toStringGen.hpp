@@ -44,7 +44,7 @@ R"(    oss << "}";
         if (member.kind == MemberKind::CharArray)
         {
             auto format =
-R"(    oss << "%s :\"" << std::string_view{data.%s, %d} << "\",";)";
+R"(    oss << "%s :\"" << std::string_view{data.%s, %d} << "\", ";)";
             auto formatIsLast =
 R"(    oss << "%s :\"" << std::string_view{data.%s, %d} << "\"";)";
 
@@ -53,7 +53,7 @@ R"(    oss << "%s :\"" << std::string_view{data.%s, %d} << "\"";)";
         else if (member.kind == MemberKind::Char)
         {
             auto format =
-R"A(    oss << "%s :\"" << data.%s << "\"" << " (0x" << std::hex << (int) data.%s << ")" << std::dec << ",";)A";
+R"A(    oss << "%s :\"" << data.%s << "\"" << " (0x" << std::hex << (int) data.%s << ")" << std::dec << ", ";)A";
             auto formatIsLast =
 R"A(    oss << "%s :\"" << data.%s << "\"" << " (0x" << std::hex << (int) data.%s << ")" << std::dec;)A";
             sprintf(buffer, isLast ? formatIsLast : format, member.name.data(), member.name.data(), member.name.data());
@@ -62,7 +62,7 @@ R"A(    oss << "%s :\"" << data.%s << "\"" << " (0x" << std::hex << (int) data.%
         {
             // TODO integer and fp arrays are not supported for ToString serialization
             auto format =
-R"(    oss << "%s :<UnsupportedArray>" << ",";)";
+R"(    oss << "%s :<UnsupportedArray>" << ", ";)";
             auto formatIsLast =
 R"(    oss << "%s :<UnsupportedArray>";)";
             sprintf(buffer, isLast ? formatIsLast : format, member.name.data(), member.name.data());
@@ -70,7 +70,7 @@ R"(    oss << "%s :<UnsupportedArray>";)";
         else
         {
             auto format =
-R"(    oss << "%s :" << data.%s << ",";)";
+R"(    oss << "%s :" << data.%s << ", ";)";
             auto formatIsLast =
 R"(    oss << "%s :" << data.%s;)";
             sprintf(buffer, isLast ? formatIsLast : format, member.name.data(), member.name.data());
